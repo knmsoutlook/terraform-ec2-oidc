@@ -1,4 +1,4 @@
-name: Terraform EC2 using OIDC
+name: Deploy EC2 with Terraform
 
 on:
   push:
@@ -12,25 +12,33 @@ permissions:
 jobs:
   terraform:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-      - name: Configure AWS credentials (OIDC)
-        uses: aws-actions/configure-aws-credentials@v4
+      # --- Debug OIDC token (optional, can remove later) ---
+      - name: Inspect OIDC token
+        run: |
+          echo "OIDC token payload:"
+          curl -s -H "Authorization: Bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" $ACTIONS_ID_TOKEN_REQUEST_URL | jq
+
+      # --- Configure AWS credentials via OIDC ---
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
         with:
-          role-to-assume: arn:aws:iam::679336465006:role/github-oidc
+          role-to-assume: arn:aws:iam::679336465006:role/github-oidc  # Replace with your role ARN
           aws-region: us-east-1
 
+      # --- Setup Terraform ---
       - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.7.0
 
       - name: Terraform Init
+        working-directory: terraform
         run: terraform init
 
-      - name: Terraform Plan
-        run: terraform plan
-
       - name: Terraform Apply
+        working-directory: terraform
         run: terraform apply -auto-approve
