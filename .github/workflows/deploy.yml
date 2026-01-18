@@ -21,7 +21,6 @@ jobs:
         with:
           role-to-assume: arn:aws:iam::679336465006:role/Github-actions-Kamal
           
-
   # Replace with your IAM role ARN
           aws-region: us-east-1
 
