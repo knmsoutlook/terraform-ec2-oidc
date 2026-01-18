@@ -1,6 +1,6 @@
 resource "aws_key_pair" "deployer_key" {
   key_name   = "github-action-key"
-  public_key = file("~/.ssh/id_rsa.pub") # Your SSH public key
+  public_key = var.ssh_public_key # Github Action<-- SSH public key
 }
 
 resource "aws_instance" "web" {
