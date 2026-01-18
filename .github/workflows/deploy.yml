@@ -33,10 +33,6 @@ jobs:
         working-directory: .
         run: terraform init
 
-      - name: Terraform Plan
-        working-directory: .
-        run: terraform apply -auto-approve tfplan
-
       - name: Terraform Apply
         working-directory: .
         run: terraform apply -auto-approve -var="ssh_public_key=${{ secrets.SSH_PUBLIC_KEY }}"
