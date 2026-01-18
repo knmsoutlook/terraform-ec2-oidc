@@ -39,4 +39,4 @@ jobs:
 
       - name: Terraform Apply
         working-directory: .
-        run: terraform apply -auto-approve
+        run: terraform apply -auto-approve -var="ssh_public_key=${{ secrets.SSH_PUBLIC_KEY }}" tfplan
